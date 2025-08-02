@@ -42,6 +42,73 @@
             color: #1d4ed8;
             font-weight: 600;
         }
+        .quote-card {
+            transition: all 0.3s ease;
+        }
+        .quote-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+        .calendar-day {
+            height: 100px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .calendar-day:hover {
+            background-color: #f1f5f9;
+        }
+        .calendar-day.today {
+            background-color: #dbeafe;
+            border: 2px solid #3b82f6;
+        }
+        .calendar-day.has-move {
+            background-color: #f0f9ff;
+            position: relative;
+        }
+        .calendar-day.has-move::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background-color: #1d4ed8;
+            border-radius: 50%;
+        }
+        .review-card {
+            transition: all 0.2s;
+        }
+        .review-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        .rating-stars {
+            cursor: pointer;
+        }
+        .report-chart {
+            min-height: 300px;
+        }
+        .settings-section {
+            transition: all 0.2s;
+        }
+        .settings-section:hover {
+            background-color: #f8fafc;
+        }
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            min-width: 18px;
+            min-height: 18px;
+            border-radius: 50%;
+            background-color: #ef4444;
+            color: white;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     </style>
     <script>
         // Initialize data storage
@@ -133,13 +200,151 @@
                 localStorage.setItem('packndash_customers', JSON.stringify(initialCustomers));
             }
             
+            // Initialize quotes
+            if (!localStorage.getItem('packndash_quotes')) {
+                const initialQuotes = [
+                    {
+                        id: 1,
+                        customerId: 5,
+                        customerName: 'Ahmed Khan',
+                        date: '2023-11-18',
+                        status: 'pending',
+                        moveSize: '2-bedroom apartment',
+                        services: ['Packing', 'Storage'],
+                        estimatedCost: 1850,
+                        validity: '2023-11-25'
+                    },
+                    {
+                        id: 2,
+                        customerId: 6,
+                        customerName: 'Sarah Johnson',
+                        date: '2023-11-17',
+                        status: 'accepted',
+                        moveSize: 'Office (300 sq ft)',
+                        services: ['Commercial Moving', 'Document Storage'],
+                        estimatedCost: 2400,
+                        validity: '2023-11-24'
+                    },
+                    {
+                        id: 3,
+                        customerId: 7,
+                        customerName: 'Mohammed Ali',
+                        date: '2023-11-16',
+                        status: 'rejected',
+                        moveSize: '1-bedroom apartment',
+                        services: ['Packing', 'Vehicle Transport'],
+                        estimatedCost: 1200,
+                        validity: '2023-11-23'
+                    }
+                ];
+                localStorage.setItem('packndash_quotes', JSON.stringify(initialQuotes));
+            }
+            
+            // Initialize reviews
+            if (!localStorage.getItem('packndash_reviews')) {
+                const initialReviews = [
+                    {
+                        id: 1,
+                        customerId: 1,
+                        customerName: 'Karim El Alaili',
+                        rating: 5,
+                        review: 'Usman and his team handled our move last weekend and they were beyond fantastic! Arrived early, packed neatly and efficiently, and got us settled in our new home in no time. Highly recommended',
+                        date: '2023-11-15',
+                        status: 'published'
+                    },
+                    {
+                        id: 2,
+                        customerId: 2,
+                        customerName: 'Jiji Jayan',
+                        rating: 5,
+                        review: 'The team is fantastic. This is the second time we have used the team service. They are very professional, punctual, and knowledgeable. Great team. Highly recommended.',
+                        date: '2023-11-20',
+                        status: 'published'
+                    },
+                    {
+                        id: 3,
+                        customerId: 3,
+                        customerName: 'Yasmin Hamadeh',
+                        rating: 5,
+                        review: 'Very professional team, very fast and kind at a very affordable price. Definitely would advise dealing with them.',
+                        date: '2023-11-10',
+                        status: 'published'
+                    },
+                    {
+                        id: 4,
+                        customerId: 4,
+                        customerName: 'Baban',
+                        rating: 5,
+                        review: 'Amazing work by Raza, Imran, Arsalan. The moving-in process was really smooth and everything from dismantling to installation was handled with care and they were perfect at their job. Highly recommended.',
+                        date: '2023-11-05',
+                        status: 'published'
+                    },
+                    {
+                        id: 5,
+                        customerId: 8,
+                        customerName: 'Fatima Ahmed',
+                        rating: 4,
+                        review: 'Good service overall. The team was professional and careful with our belongings. Only issue was they arrived 30 minutes late.',
+                        date: '2023-11-12',
+                        status: 'pending'
+                    }
+                ];
+                localStorage.setItem('packndash_reviews', JSON.stringify(initialReviews));
+            }
+            
+            // Initialize settings
+            if (!localStorage.getItem('packndash_settings')) {
+                const initialSettings = {
+                    companyName: 'PacknDash',
+                    companyAddress: 'Dubai, UAE',
+                    companyPhone: '+971 4 222 2222',
+                    companyEmail: 'info@packndash.ae',
+                    notificationSettings: {
+                        email: true,
+                        sms: true,
+                        push: true
+                    },
+                    businessHours: {
+                        monday: '8:00 AM - 6:00 PM',
+                        tuesday: '8:00 AM - 6:00 PM',
+                        wednesday: '8:00 AM - 6:00 PM',
+                        thursday: '8:00 AM - 6:00 PM',
+                        friday: '9:00 AM - 2:00 PM',
+                        saturday: 'Closed',
+                        sunday: 'Closed'
+                    },
+                    services: [
+                        { name: 'Residential Moving', price: 100, active: true },
+                        { name: 'Commercial Storage', price: 150, active: true },
+                        { name: 'Vehicle Storage', price: 80, active: true },
+                        { name: 'Document Storage', price: 60, active: true },
+                        { name: 'Packing Services', price: 50, active: true },
+                        { name: 'Furniture Assembly', price: 75, active: true }
+                    ]
+                };
+                localStorage.setItem('packndash_settings', JSON.stringify(initialSettings));
+            }
+            
             // Initialize with stats
             if (!localStorage.getItem('packndash_stats')) {
                 const initialStats = {
                     happyCustomers: 1253,
                     successfulMoves: 2107,
                     activeMoves: 18,
-                    revenue: 142500
+                    revenue: 142500,
+                    monthlyData: {
+                        '2023-01': { moves: 150, revenue: 125000 },
+                        '2023-02': { moves: 165, revenue: 137500 },
+                        '2023-03': { moves: 170, revenue: 141500 },
+                        '2023-04': { moves: 180, revenue: 150000 },
+                        '2023-05': { moves: 190, revenue: 158000 },
+                        '2023-06': { moves: 200, revenue: 166500 },
+                        '2023-07': { moves: 195, revenue: 162500 },
+                        '2023-08': { moves: 210, revenue: 175000 },
+                        '2023-09': { moves: 220, revenue: 183000 },
+                        '2023-10': { moves: 215, revenue: 179000 },
+                        '2023-11': { moves: 180, revenue: 150000 }
+                    }
                 };
                 localStorage.setItem('packndash_stats', JSON.stringify(initialStats));
             }
@@ -150,7 +355,8 @@
         
         // Main CRM loading function
         function loadCRM() {
-            renderDashboard();
+            // Set up initial tab
+            document.querySelector('[data-tab="dashboard"]').click();
             setupEventListeners();
         }
         
@@ -158,7 +364,8 @@
         function setupEventListeners() {
             // Tab switching
             document.querySelectorAll('[data-tab]').forEach(tab => {
-                tab.addEventListener('click', function() {
+                tab.addEventListener('click', function(e) {
+                    e.preventDefault();
                     document.querySelectorAll('[data-tab]').forEach(t => {
                         t.classList.remove('tab-active');
                     });
@@ -168,6 +375,14 @@
                     if (tabId === 'dashboard') renderDashboard();
                     if (tabId === 'customers') renderCustomers();
                     if (tabId === 'moves') renderMoves();
+                    if (tabId === 'quotes') renderQuotes();
+                    if (tabId === 'schedule') renderSchedule();
+                    if (tabId === 'reviews') renderReviews();
+                    if (tabId === 'reports') renderReports();
+                    if (tabId === 'settings') renderSettings();
+                    
+                    // Update header
+                    updateHeader(tabId);
                 });
             });
             
@@ -179,6 +394,8 @@
                     if (activeTab === 'dashboard') renderDashboard();
                     if (activeTab === 'customers') renderCustomers();
                     if (activeTab === 'moves') renderMoves();
+                    if (activeTab === 'quotes') renderQuotes();
+                    if (activeTab === 'reviews') renderReviews();
                 });
             }
             
@@ -190,13 +407,21 @@
                 });
             }
             
-            // Close modal
-            const closeBtn = document.querySelector('.close-modal');
-            if (closeBtn) {
-                closeBtn.addEventListener('click', function() {
-                    document.getElementById('newMoveModal').style.display = 'none';
+            // New quote button
+            const newQuoteBtn = document.getElementById('newQuoteBtn');
+            if (newQuoteBtn) {
+                newQuoteBtn.addEventListener('click', function() {
+                    document.getElementById('newQuoteModal').style.display = 'block';
                 });
             }
+            
+            // Close modals
+            document.querySelectorAll('.close-modal, .modal-overlay').forEach(element => {
+                element.addEventListener('click', function() {
+                    const modal = this.closest('.modal') || this;
+                    modal.style.display = 'none';
+                });
+            });
             
             // Create new move
             const moveForm = document.getElementById('moveForm');
@@ -248,7 +473,51 @@
                     alert('New move request created successfully!');
                     
                     // Refresh the moves view
-                    renderMoves();
+                    if (document.querySelector('[data-tab].tab-active')?.getAttribute('data-tab') === 'moves') {
+                        renderMoves();
+                    }
+                });
+            }
+            
+            // Create new quote
+            const quoteForm = document.getElementById('quoteForm');
+            if (quoteForm) {
+                quoteForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    const formData = {
+                        id: Date.now(),
+                        customerId: document.getElementById('quoteCustomerId').value || Date.now(),
+                        customerName: document.getElementById('quoteCustomerName').value,
+                        date: new Date().toISOString().split('T')[0],
+                        status: document.getElementById('quoteStatus').value,
+                        moveSize: document.getElementById('quoteMoveSize').value,
+                        services: [],
+                        estimatedCost: parseFloat(document.getElementById('quoteCost').value),
+                        validity: document.getElementById('quoteValidity').value
+                    };
+                    
+                    // Get selected services
+                    document.querySelectorAll('#quoteForm input[name="quoteServices"]:checked').forEach(service => {
+                        formData.services.push(service.value);
+                    });
+                    
+                    // Save to localStorage
+                    let quotes = JSON.parse(localStorage.getItem('packndash_quotes')) || [];
+                    quotes.push(formData);
+                    localStorage.setItem('packndash_quotes', JSON.stringify(quotes));
+                    
+                    // Close modal and refresh
+                    document.getElementById('newQuoteModal').style.display = 'none';
+                    quoteForm.reset();
+                    
+                    // Show success message
+                    alert('New quote created successfully!');
+                    
+                    // Refresh the quotes view
+                    if (document.querySelector('[data-tab].tab-active')?.getAttribute('data-tab') === 'quotes') {
+                        renderQuotes();
+                    }
                 });
             }
             
@@ -288,10 +557,13 @@
                         localStorage.setItem('packndash_customers', JSON.stringify(customers));
                         
                         // Refresh the view
-                        if (document.querySelector('[data-tab].tab-active')?.getAttribute('data-tab') === 'dashboard') {
+                        const activeTab = document.querySelector('[data-tab].tab-active')?.getAttribute('data-tab');
+                        if (activeTab === 'dashboard') {
                             renderDashboard();
-                        } else {
+                        } else if (activeTab === 'moves') {
                             renderMoves();
+                        } else if (activeTab === 'customers') {
+                            renderCustomers();
                         }
                         
                         alert('Step marked as completed!');
@@ -301,18 +573,127 @@
             
             // View customer details
             document.addEventListener('click', function(e) {
-                if (e.target && e.target.matches('.view-details')) {
-                    const customerId = e.target.getAttribute('data-customer-id');
+                if (e.target && e.target.matches('.view-details, .view-details *')) {
+                    const customerId = e.target.closest('.view-details').getAttribute('data-customer-id');
                     showCustomerDetails(customerId);
                 }
             });
             
-            // Close details modal
+            // View quote details
             document.addEventListener('click', function(e) {
-                if (e.target && e.target.matches('.close-details')) {
-                    document.getElementById('customerDetailsModal').style.display = 'none';
+                if (e.target && e.target.matches('.view-quote')) {
+                    const quoteId = e.target.getAttribute('data-quote-id');
+                    showQuoteDetails(quoteId);
                 }
             });
+            
+            // View review details
+            document.addEventListener('click', function(e) {
+                if (e.target && e.target.matches('.view-review')) {
+                    const reviewId = e.target.getAttribute('data-review-id');
+                    showReviewDetails(reviewId);
+                }
+            });
+            
+            // Update review status
+            document.addEventListener('click', function(e) {
+                if (e.target && e.target.matches('.update-review-status')) {
+                    const reviewId = e.target.getAttribute('data-review-id');
+                    const status = e.target.getAttribute('data-status');
+                    updateReviewStatus(reviewId, status);
+                }
+            });
+            
+            // Update quote status
+            document.addEventListener('click', function(e) {
+                if (e.target && e.target.matches('.update-quote-status')) {
+                    const quoteId = e.target.getAttribute('data-quote-id');
+                    const status = e.target.getAttribute('data-status');
+                    updateQuoteStatus(quoteId, status);
+                }
+            });
+            
+            // Calendar navigation
+            document.addEventListener('click', function(e) {
+                if (e.target && e.target.matches('.calendar-prev, .calendar-next')) {
+                    const direction = e.target.classList.contains('calendar-prev') ? -1 : 1;
+                    changeCalendarMonth(direction);
+                }
+            });
+            
+            // Settings save buttons
+            document.addEventListener('click', function(e) {
+                if (e.target && e.target.matches('#saveCompanySettings, #saveNotificationSettings, #saveBusinessHours, #saveServices')) {
+                    saveSettings(e.target.id);
+                }
+            });
+            
+            // Service toggle
+            document.addEventListener('click', function(e) {
+                if (e.target && e.target.matches('.service-toggle')) {
+                    const serviceName = e.target.getAttribute('data-service');
+                    toggleService(serviceName);
+                }
+            });
+            
+            // Rating interaction
+            document.addEventListener('click', function(e) {
+                if (e.target && e.target.matches('.rating-star')) {
+                    const reviewId = e.target.getAttribute('data-review-id');
+                    const rating = e.target.getAttribute('data-rating');
+                    updateReviewRating(reviewId, rating);
+                }
+            });
+            
+            // Calendar day click
+            document.addEventListener('click', function(e) {
+                if (e.target && e.target.closest('.calendar-day')) {
+                    const dayElement = e.target.closest('.calendar-day');
+                    const date = dayElement.getAttribute('data-date');
+                    showDayMoves(date);
+                }
+            });
+        }
+        
+        // Update header based on active tab
+        function updateHeader(tabId) {
+            const headers = {
+                dashboard: {
+                    title: 'Dashboard',
+                    subtitle: 'Overview of your moving business'
+                },
+                customers: {
+                    title: 'Customer Management',
+                    subtitle: 'Manage your customer database'
+                },
+                moves: {
+                    title: 'Move Management',
+                    subtitle: 'Track all active and scheduled moves'
+                },
+                quotes: {
+                    title: 'Quote Generator',
+                    subtitle: 'Create and manage move estimates'
+                },
+                schedule: {
+                    title: 'Schedule',
+                    subtitle: 'View and manage your move calendar'
+                },
+                reviews: {
+                    title: 'Customer Reviews',
+                    subtitle: 'Manage customer feedback and reviews'
+                },
+                reports: {
+                    title: 'Reports & Analytics',
+                    subtitle: 'Business performance analytics'
+                },
+                settings: {
+                    title: 'Settings',
+                    subtitle: 'Configure CRM settings'
+                }
+            };
+            
+            document.querySelector('h1.text-2xl').textContent = headers[tabId].title;
+            document.querySelector('p.text-gray-500').textContent = headers[tabId].subtitle;
         }
         
         // Render Dashboard
@@ -339,8 +720,9 @@
             ).slice(0, 3);
             
             // Recent reviews
-            const recentReviews = filteredCustomers.filter(customer => 
-                customer.review && customer.rating
+            const reviews = JSON.parse(localStorage.getItem('packndash_reviews')) || [];
+            const recentReviews = reviews.filter(review => 
+                review.status === 'published'
             ).slice(0, 3);
             
             // Dashboard HTML
@@ -467,7 +849,7 @@
                                             <button class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 view-details" data-customer-id="${customer.id}">
                                                 View Details
                                             </button>
-                                            <button class="flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700" onclick="showCustomerDetails(${customer.id})">
+                                            <button class="flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700" data-customer-id="${customer.id}">
                                                 Manage Move
                                             </button>
                                         </div>
@@ -596,7 +978,7 @@
                                 
                                 <div class="space-y-4">
                                     ${recentReviews.map(review => `
-                                    <div class="border border-gray-200 rounded-lg p-4">
+                                    <div class="border border-gray-200 rounded-lg p-4 review-card">
                                         <div class="flex items-center mb-2">
                                             ${[...Array(5)].map((_, i) => `
                                                 <i class="fas fa-star text-yellow-400 ${i < review.rating ? 'fill-current' : ''}"></i>
@@ -606,8 +988,8 @@
                                         <div class="mt-3 flex items-center">
                                             <div class="bg-gray-300 border-2 border-dashed rounded w-8 h-8"></div>
                                             <div class="ml-2">
-                                                <p class="font-medium text-gray-800">${review.name}</p>
-                                                <p class="text-xs text-gray-500">${review.moveSize}</p>
+                                                <p class="font-medium text-gray-800">${review.customerName}</p>
+                                                <p class="text-xs text-gray-500">${formatDate(review.date)}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -1000,20 +1382,561 @@
             setupEventListeners();
         }
         
-        // Show customer details
-        function showCustomerDetails(customerId) {
+        // Render Quotes
+        function renderQuotes() {
+            const searchQuery = document.getElementById('searchInput')?.value?.toLowerCase() || '';
+            const quotes = JSON.parse(localStorage.getItem('packndash_quotes')) || [];
             const customers = JSON.parse(localStorage.getItem('packndash_customers')) || [];
-            const customer = customers.find(c => c.id == customerId);
             
-            if (!customer) return;
+            // Filter quotes
+            const filteredQuotes = quotes.filter(quote => 
+                quote.customerName.toLowerCase().includes(searchQuery) ||
+                quote.moveSize.toLowerCase().includes(searchQuery) ||
+                quote.estimatedCost.toString().includes(searchQuery)
+            );
             
-            const detailsHTML = `
-                <div id="customerDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+            // Quotes HTML
+            const quotesHTML = `
+                <div class="p-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                            <div>
+                                <h2 class="text-lg font-semibold text-gray-800">Quotes Management</h2>
+                                <p class="text-gray-500 text-sm mt-1">Create and manage move estimates for potential customers</p>
+                            </div>
+                            <div class="mt-4 md:mt-0">
+                                <button id="newQuoteBtn" class="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                                    <i class="fas fa-file-invoice mr-2"></i>
+                                    New Quote
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6 flex space-x-4">
+                            <button class="px-4 py-2 rounded-lg font-medium ${
+                                !searchQuery ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            }" onclick="filterQuotes('all')">All Quotes</button>
+                            <button class="px-4 py-2 rounded-lg font-medium ${
+                                document.querySelector('[data-tab].tab-active')?.getAttribute('data-tab') === 'quotes' && 
+                                document.querySelector('#searchInput')?.value === 'pending' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            }" onclick="filterQuotes('pending')">Pending</button>
+                            <button class="px-4 py-2 rounded-lg font-medium ${
+                                document.querySelector('[data-tab].tab-active')?.getAttribute('data-tab') === 'quotes' && 
+                                document.querySelector('#searchInput')?.value === 'accepted' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            }" onclick="filterQuotes('accepted')">Accepted</button>
+                            <button class="px-4 py-2 rounded-lg font-medium ${
+                                document.querySelector('[data-tab].tab-active')?.getAttribute('data-tab') === 'quotes' && 
+                                document.querySelector('#searchInput')?.value === 'rejected' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                            }" onclick="filterQuotes('rejected')">Rejected</button>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            ${filteredQuotes.map(quote => `
+                            <div class="border border-gray-200 rounded-xl p-5 quote-card">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div>
+                                        <h3 class="font-medium text-gray-800">${quote.customerName}</h3>
+                                        <p class="text-sm text-gray-500">${quote.moveSize}</p>
+                                    </div>
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium ${
+                                        quote.status === 'pending' ? 'bg-amber-100 text-amber-800' :
+                                        quote.status === 'accepted' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                                    }">
+                                        ${quote.status.charAt(0).toUpperCase() + quote.status.slice(1)}
+                                    </span>
+                                </div>
+                                
+                                <div class="space-y-3 mb-4">
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500 text-sm">Date Created</span>
+                                        <span class="font-medium text-gray-800 text-sm">${formatDate(quote.date)}</span>
+                                    </div>
+                                    <div class="flex justify-between">
+                                        <span class="text-gray-500 text-sm">Valid Until</span>
+                                        <span class="font-medium text-gray-800 text-sm">${formatDate(quote.validity)}</span>
+                                    </div>
+                                    <div class="border-t border-gray-200 pt-3">
+                                        <div class="flex justify-between font-bold">
+                                            <span>Estimated Cost</span>
+                                            <span>AED ${formatNumber(quote.estimatedCost)}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <h4 class="text-sm font-medium text-gray-700 mb-2">Services Included</h4>
+                                    <div class="flex flex-wrap gap-2">
+                                        ${quote.services.map(service => `
+                                            <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                                                ${service}
+                                            </span>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                                
+                                <div class="flex space-x-2">
+                                    <button class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 view-quote" data-quote-id="${quote.id}">
+                                        View Details
+                                    </button>
+                                    ${quote.status === 'pending' ? `
+                                    <button class="update-quote-status flex-1 px-3 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700" 
+                                            data-quote-id="${quote.id}" data-status="accepted">
+                                        Accept
+                                    </button>
+                                    ` : ''}
+                                </div>
+                            </div>
+                            `).join('')}
+                            
+                            ${filteredQuotes.length === 0 ? `
+                            <div class="col-span-full text-center py-12 bg-gray-50 rounded-xl">
+                                <i class="fas fa-file-invoice text-4xl text-gray-300 mb-4"></i>
+                                <h3 class="text-lg font-medium text-gray-800">No quotes found</h3>
+                                <p class="text-gray-500 mt-2">You haven't created any quotes yet.</p>
+                                <button id="newQuoteBtn" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                    <i class="fas fa-plus mr-2"></i>Create Your First Quote
+                                </button>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('mainContent').innerHTML = quotesHTML;
+            setupEventListeners();
+        }
+        
+        // Filter quotes by status
+        function filterQuotes(status) {
+            if (status === 'all') {
+                document.getElementById('searchInput').value = '';
+            } else {
+                document.getElementById('searchInput').value = status;
+            }
+            
+            const event = new Event('input', { bubbles: true });
+            document.getElementById('searchInput').dispatchEvent(event);
+        }
+        
+        // Render Schedule
+        function renderSchedule() {
+            const today = new Date();
+            let currentMonth = today.getMonth();
+            let currentYear = today.getFullYear();
+            
+            // Get current month's first day
+            const firstDay = new Date(currentYear, currentMonth, 1);
+            // Get number of days in month
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+            // Get day of week for first day (0 = Sunday, 1 = Monday, etc.)
+            const firstDayOfWeek = firstDay.getDay();
+            
+            // Get moves data
+            const customers = JSON.parse(localStorage.getItem('packndash_customers')) || [];
+            const movesByDate = {};
+            
+            customers.forEach(customer => {
+                if (customer.moveDate) {
+                    const dateKey = customer.moveDate.split('T')[0] || customer.moveDate;
+                    if (!movesByDate[dateKey]) {
+                        movesByDate[dateKey] = [];
+                    }
+                    movesByDate[dateKey].push(customer);
+                }
+            });
+            
+            // Generate calendar days
+            let calendarHTML = '';
+            
+            // Add empty cells for days before the first of the month
+            for (let i = 0; i < firstDayOfWeek; i++) {
+                calendarHTML += `<div class="calendar-day"></div>`;
+            }
+            
+            // Add days of the month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(currentYear, currentMonth, day);
+                const dateStr = `${currentYear}-${(currentMonth + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
+                const isToday = date.toDateString() === today.toDateString();
+                const hasMove = movesByDate[dateStr];
+                
+                calendarHTML += `
+                <div class="calendar-day ${isToday ? 'today' : ''} ${hasMove ? 'has-move' : ''}" data-date="${dateStr}">
+                    <div class="font-medium ${isToday ? 'text-blue-600' : ''}">${day}</div>
+                    ${hasMove ? `<div class="text-xs mt-1 text-blue-600">${hasMove.length} move${hasMove.length > 1 ? 's' : ''}</div>` : ''}
+                </div>
+                `;
+            }
+            
+            // Schedule HTML
+            const scheduleHTML = `
+                <div class="p-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <div>
+                                <h2 class="text-lg font-semibold text-gray-800">Move Schedule</h2>
+                                <p class="text-gray-500 text-sm mt-1">View and manage your move calendar</p>
+                            </div>
+                            <div class="flex space-x-2">
+                                <button class="calendar-prev px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <button class="px-3 py-2 font-medium text-gray-800">
+                                    ${today.toLocaleString('default', { month: 'long', year: 'numeric' })}
+                                </button>
+                                <button class="calendar-next px-3 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-7 gap-1 mb-4">
+                            <div class="text-center font-medium text-gray-600 py-2">Sun</div>
+                            <div class="text-center font-medium text-gray-600 py-2">Mon</div>
+                            <div class="text-center font-medium text-gray-600 py-2">Tue</div>
+                            <div class="text-center font-medium text-gray-600 py-2">Wed</div>
+                            <div class="text-center font-medium text-gray-600 py-2">Thu</div>
+                            <div class="text-center font-medium text-gray-600 py-2">Fri</div>
+                            <div class="text-center font-medium text-gray-600 py-2">Sat</div>
+                        </div>
+                        
+                        <div class="grid grid-cols-7 gap-1 mb-6">
+                            ${calendarHTML}
+                        </div>
+                        
+                        <div class="mt-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Today's Moves (${formatDate(today.toISOString().split('T')[0])})</h3>
+                            
+                            <div class="space-y-4">
+                                ${movesByDate[today.toISOString().split('T')[0]]?.length > 0 ? 
+                                    movesByDate[today.toISOString().split('T')[0]].map(customer => `
+                                    <div class="border border-gray-200 rounded-lg p-4">
+                                        <div class="flex justify-between items-start">
+                                            <div>
+                                                <h3 class="font-medium text-gray-800">${customer.name}</h3>
+                                                <p class="text-gray-500 text-sm mt-1 flex items-center">
+                                                    <i class="fas fa-map-marker-alt mr-1"></i> ${customer.address}
+                                                </p>
+                                            </div>
+                                            <span class="px-2 py-1 rounded-full text-xs font-medium ${
+                                                customer.status === 'completed' 
+                                                    ? 'bg-green-100 text-green-800' 
+                                                    : customer.status === 'in-progress'
+                                                        ? 'bg-amber-100 text-amber-800'
+                                                        : 'bg-blue-100 text-blue-800'
+                                            }">
+                                                ${customer.status.charAt(0).toUpperCase() + customer.status.slice(1)}
+                                            </span>
+                                        </div>
+                                        
+                                        <div class="mt-3">
+                                            <p class="text-sm text-gray-600">Property: <span class="font-medium text-gray-800">${customer.moveSize}</span></p>
+                                            <div class="mt-2 flex flex-wrap gap-2">
+                                                ${customer.services.map(service => `
+                                                    <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                                                        ${service}
+                                                    </span>
+                                                `).join('')}
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mt-3 flex space-x-2">
+                                            <button class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 view-details" data-customer-id="${customer.id}">
+                                                View Details
+                                            </button>
+                                            <button class="flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700" onclick="showCustomerDetails(${customer.id})">
+                                                Manage Move
+                                            </button>
+                                        </div>
+                                    </div>
+                                    `).join('') : `
+                                    <div class="text-center py-8 bg-gray-50 rounded-lg">
+                                        <i class="fas fa-calendar-check text-3xl text-gray-300 mb-3"></i>
+                                        <h3 class="text-lg font-medium text-gray-800">No moves scheduled for today</h3>
+                                        <p class="text-gray-500 mt-2">Your calendar is clear for today.</p>
+                                    </div>
+                                `}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('mainContent').innerHTML = scheduleHTML;
+            setupEventListeners();
+        }
+        
+        // Change calendar month
+        function changeCalendarMonth(direction) {
+            const today = new Date();
+            let currentMonth = today.getMonth();
+            let currentYear = today.getFullYear();
+            
+            currentMonth += direction;
+            if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            } else if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            }
+            
+            // Update calendar display
+            const calendarHeader = document.querySelector('.calendar-next').previousElementSibling;
+            calendarHeader.textContent = `${new Date(currentYear, currentMonth, 1).toLocaleString('default', { month: 'long', year: 'numeric' })}`;
+            
+            // For this demo, we're not actually changing the calendar
+            // In a real implementation, you would re-render the calendar with the new month
+            alert(`Calendar would show ${new Date(currentYear, currentMonth, 1).toLocaleString('default', { month: 'long', year: 'numeric' })}`);
+        }
+        
+        // Show moves for a specific day
+        function showDayMoves(date) {
+            const customers = JSON.parse(localStorage.getItem('packndash_customers')) || [];
+            const movesForDay = customers.filter(customer => 
+                customer.moveDate && customer.moveDate.startsWith(date)
+            );
+            
+            let movesHTML = '';
+            
+            if (movesForDay.length > 0) {
+                movesHTML = movesForDay.map(customer => `
+                <div class="border border-gray-200 rounded-lg p-4 mb-4">
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h3 class="font-medium text-gray-800">${customer.name}</h3>
+                            <p class="text-gray-500 text-sm mt-1 flex items-center">
+                                <i class="fas fa-map-marker-alt mr-1"></i> ${customer.address}
+                            </p>
+                        </div>
+                        <span class="px-2 py-1 rounded-full text-xs font-medium ${
+                            customer.status === 'completed' 
+                                ? 'bg-green-100 text-green-800' 
+                                : customer.status === 'in-progress'
+                                    ? 'bg-amber-100 text-amber-800'
+                                    : 'bg-blue-100 text-blue-800'
+                        }">
+                            ${customer.status.charAt(0).toUpperCase() + customer.status.slice(1)}
+                        </span>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <p class="text-sm text-gray-600">Property: <span class="font-medium text-gray-800">${customer.moveSize}</span></p>
+                        <div class="mt-2 flex flex-wrap gap-2">
+                            ${customer.services.map(service => `
+                                <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
+                                    ${service}
+                                </span>
+                            `).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="mt-3 flex space-x-2">
+                        <button class="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50 view-details" data-customer-id="${customer.id}">
+                            View Details
+                        </button>
+                        <button class="flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700" onclick="showCustomerDetails(${customer.id})">
+                            Manage Move
+                        </button>
+                    </div>
+                </div>
+                `).join('');
+            } else {
+                movesHTML = `
+                <div class="text-center py-8 bg-gray-50 rounded-lg">
+                    <i class="fas fa-calendar-check text-3xl text-gray-300 mb-3"></i>
+                    <h3 class="text-lg font-medium text-gray-800">No moves scheduled for this day</h3>
+                    <p class="text-gray-500 mt-2">This day is clear in your calendar.</p>
+                </div>
+                `;
+            }
+            
+            // Create modal
+            const modalHTML = `
+                <div class="modal fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" style="display: block;">
                     <div class="bg-white rounded-xl shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
                         <div class="p-6">
                             <div class="flex justify-between items-center mb-6">
-                                <h2 class="text-xl font-bold text-gray-800">${customer.name}</h2>
-                                <button class="close-details text-gray-400 hover:text-gray-600">
+                                <h2 class="text-xl font-bold text-gray-800">Moves for ${formatDate(date)}</h2>
+                                <button class="close-modal text-gray-400 hover:text-gray-600">
+                                    <i class="fas fa-times text-2xl"></i>
+                                </button>
+                            </div>
+                            
+                            <div>
+                                ${movesHTML}
+                            </div>
+                            
+                            <div class="mt-6 flex justify-end">
+                                <button class="close-modal px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                    Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add modal to body
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+            setupEventListeners();
+        }
+        
+        // Render Reviews
+        function renderReviews() {
+            const searchQuery = document.getElementById('searchInput')?.value?.toLowerCase() || '';
+            const reviews = JSON.parse(localStorage.getItem('packndash_reviews')) || [];
+            const customers = JSON.parse(localStorage.getItem('packndash_customers')) || [];
+            
+            // Filter reviews
+            const filteredReviews = reviews.filter(review => 
+                review.customerName.toLowerCase().includes(searchQuery) ||
+                review.review.toLowerCase().includes(searchQuery)
+            );
+            
+            // Reviews HTML
+            const reviewsHTML = `
+                <div class="p-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6">
+                            <div>
+                                <h2 class="text-lg font-semibold text-gray-800">Customer Reviews</h2>
+                                <p class="text-gray-500 text-sm mt-1">Manage customer feedback and reviews</p>
+                            </div>
+                            <div class="mt-4 md:mt-0 flex space-x-3">
+                                <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    <option>All Reviews</option>
+                                    <option>Published</option>
+                                    <option>Pending</option>
+                                    <option>Archived</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            ${filteredReviews.map(review => `
+                            <div class="border border-gray-200 rounded-lg p-5 review-card">
+                                <div class="flex justify-between items-start mb-3">
+                                    <div>
+                                        <h3 class="font-medium text-gray-800">${review.customerName}</h3>
+                                        <p class="text-sm text-gray-500">${formatDate(review.date)}</p>
+                                    </div>
+                                    <span class="px-2 py-1 rounded-full text-xs font-medium ${
+                                        review.status === 'published' ? 'bg-green-100 text-green-800' :
+                                        review.status === 'pending' ? 'bg-amber-100 text-amber-800' : 'bg-gray-100 text-gray-800'
+                                    }">
+                                        ${review.status.charAt(0).toUpperCase() + review.status.slice(1)}
+                                    </span>
+                                </div>
+                                
+                                <div class="rating-stars mb-3">
+                                    ${[...Array(5)].map((_, i) => `
+                                        <i class="fas fa-star text-yellow-400 ${i < review.rating ? 'fill-current' : ''} rating-star" data-review-id="${review.id}" data-rating="${i + 1}"></i>
+                                    `).join('')}
+                                </div>
+                                
+                                <p class="text-gray-600 text-sm mb-4 line-clamp-4">${review.review}</p>
+                                
+                                <div class="pt-4 border-t border-gray-200">
+                                    <div class="flex space-x-2">
+                                        ${review.status === 'pending' ? `
+                                        <button class="update-review-status flex-1 px-3 py-2 bg-green-600 text-white rounded-lg text-sm font-medium hover:bg-green-700" 
+                                                data-review-id="${review.id}" data-status="published">
+                                            Publish
+                                        </button>
+                                        <button class="update-review-status flex-1 px-3 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700" 
+                                                data-review-id="${review.id}" data-status="archived">
+                                            Archive
+                                        </button>
+                                        ` : review.status === 'published' ? `
+                                        <button class="update-review-status flex-1 px-3 py-2 bg-red-600 text-white rounded-lg text-sm font-medium hover:bg-red-700" 
+                                                data-review-id="${review.id}" data-status="archived">
+                                            Archive
+                                        </button>
+                                        ` : `
+                                        <button class="update-review-status flex-1 px-3 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700" 
+                                                data-review-id="${review.id}" data-status="published">
+                                            Publish
+                                        </button>
+                                        `}
+                                    </div>
+                                </div>
+                            </div>
+                            `).join('')}
+                            
+                            ${filteredReviews.length === 0 ? `
+                            <div class="col-span-full text-center py-12 bg-gray-50 rounded-xl">
+                                <i class="fas fa-comments text-4xl text-gray-300 mb-4"></i>
+                                <h3 class="text-lg font-medium text-gray-800">No reviews found</h3>
+                                <p class="text-gray-500 mt-2">You don't have any customer reviews to manage.</p>
+                            </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('mainContent').innerHTML = reviewsHTML;
+            setupEventListeners();
+        }
+        
+        // Update review status
+        function updateReviewStatus(reviewId, status) {
+            let reviews = JSON.parse(localStorage.getItem('packndash_reviews')) || [];
+            const reviewIndex = reviews.findIndex(r => r.id == reviewId);
+            
+            if (reviewIndex !== -1) {
+                reviews[reviewIndex].status = status;
+                localStorage.setItem('packndash_reviews', JSON.stringify(reviews));
+                
+                // Refresh the reviews view
+                renderReviews();
+                
+                // Show success message
+                alert(`Review status updated to ${status}!`);
+            }
+        }
+        
+        // Update review rating
+        function updateReviewRating(reviewId, rating) {
+            let reviews = JSON.parse(localStorage.getItem('packndash_reviews')) || [];
+            const reviewIndex = reviews.findIndex(r => r.id == reviewId);
+            
+            if (reviewIndex !== -1) {
+                reviews[reviewIndex].rating = parseInt(rating);
+                localStorage.setItem('packndash_reviews', JSON.stringify(reviews));
+                
+                // Refresh the reviews view
+                renderReviews();
+                
+                // Show success message
+                alert(`Review rating updated to ${rating} stars!`);
+            }
+        }
+        
+        // Show review details
+        function showReviewDetails(reviewId) {
+            const reviews = JSON.parse(localStorage.getItem('packndash_reviews')) || [];
+            const customers = JSON.parse(localStorage.getItem('packndash_customers')) || [];
+            const review = reviews.find(r => r.id == reviewId);
+            
+            if (!review) return;
+            
+            const customer = customers.find(c => c.id == review.customerId) || {
+                name: review.customerName,
+                moveSize: 'Not specified',
+                address: 'Not specified',
+                moveDate: 'Not specified'
+            };
+            
+            const detailsHTML = `
+                <div id="reviewDetailsModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+                    <div class="bg-white rounded-xl shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
+                        <div class="p-6">
+                            <div class="flex justify-between items-center mb-6">
+                                <h2 class="text-xl font-bold text-gray-800">Review Details</h2>
+                                <button class="close-modal text-gray-400 hover:text-gray-600">
                                     <i class="fas fa-times text-2xl"></i>
                                 </button>
                             </div>
@@ -1021,14 +1944,45 @@
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                                 <div class="md:col-span-2">
                                     <div class="bg-white rounded-lg shadow p-5 mb-6">
-                                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Move Details</h3>
+                                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Review Content</h3>
+                                        
+                                        <div class="space-y-4">
+                                            <div class="flex items-center mb-4">
+                                                <div class="text-2xl font-bold text-yellow-400 mr-2">${review.rating}</div>
+                                                <div class="flex">
+                                                    ${[...Array(5)].map((_, i) => `
+                                                        <i class="fas fa-star text-yellow-400 ${i < review.rating ? 'fill-current' : ''}"></i>
+                                                    `).join('')}
+                                                </div>
+                                            </div>
+                                            
+                                            <p class="text-gray-800 leading-relaxed">${review.review}</p>
+                                            
+                                            <div class="mt-6 pt-4 border-t border-gray-200">
+                                                <div class="flex justify-between">
+                                                    <span class="text-gray-600">Status:</span>
+                                                    <span class="font-medium ${
+                                                        review.status === 'published' ? 'text-green-600' :
+                                                        review.status === 'pending' ? 'text-amber-600' : 'text-gray-600'
+                                                    }">
+                                                        ${review.status.charAt(0).toUpperCase() + review.status.slice(1)}
+                                                    </span>
+                                                </div>
+                                                <div class="flex justify-between mt-2">
+                                                    <span class="text-gray-600">Date:</span>
+                                                    <span class="font-medium">${formatDate(review.date)}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-white rounded-lg shadow p-5">
+                                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Customer Information</h3>
                                         
                                         <div class="space-y-4">
                                             <div class="flex">
-                                                <span class="w-32 font-medium text-gray-600">Customer Type:</span>
-                                                <span class="${customer.type === 'residential' ? 'text-blue-600' : 'text-purple-600'} font-medium">
-                                                    ${customer.type.charAt(0).toUpperCase() + customer.type.slice(1)}
-                                                </span>
+                                                <span class="w-32 font-medium text-gray-600">Name:</span>
+                                                <span class="text-gray-800">${customer.name}</span>
                                             </div>
                                             
                                             <div class="flex">
@@ -1045,168 +1999,83 @@
                                                 <span class="w-32 font-medium text-gray-600">Address:</span>
                                                 <span class="text-gray-800">${customer.address}</span>
                                             </div>
-                                            
-                                            <div class="flex">
-                                                <span class="w-32 font-medium text-gray-600">Services:</span>
-                                                <div class="flex flex-wrap gap-2">
-                                                    ${customer.services.map(service => `
-                                                        <span class="px-2 py-1 bg-gray-100 text-gray-700 text-xs rounded">
-                                                            ${service}
-                                                        </span>
-                                                    `).join('')}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="bg-white rounded-lg shadow p-5">
-                                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Move Workflow</h3>
-                                        
-                                        <div class="relative mb-6">
-                                            <!-- Progress line -->
-                                            <div class="absolute top-4 left-0 w-full h-1 bg-gray-200"></div>
-                                            
-                                            <div class="flex justify-between">
-                                                <!-- Plan Step -->
-                                                <div class="relative z-10 text-center">
-                                                    <div class="w-10 h-10 rounded-full ${
-                                                        customer.stepStatus.plan === 'completed' ? 'bg-green-500 text-white' : 
-                                                        customer.stepStatus.plan === 'in-progress' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'
-                                                    } flex items-center justify-center mb-2">
-                                                        ${customer.stepStatus.plan === 'completed' ? '<i class="fas fa-check"></i>' : '1'}
-                                                    </div>
-                                                    <h3 class="font-medium">Plan</h3>
-                                                    <p class="text-xs text-gray-500 mt-1">Evaluation & Planning</p>
-                                                </div>
-                                                
-                                                <!-- Pack Step -->
-                                                <div class="relative z-10 text-center">
-                                                    <div class="w-10 h-10 rounded-full ${
-                                                        customer.stepStatus.pack === 'completed' ? 'bg-green-500 text-white' : 
-                                                        customer.stepStatus.pack === 'in-progress' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'
-                                                    } flex items-center justify-center mb-2">
-                                                        ${customer.stepStatus.pack === 'completed' ? '<i class="fas fa-check"></i>' : '2'}
-                                                    </div>
-                                                    <h3 class="font-medium">Pack</h3>
-                                                    <p class="text-xs text-gray-500 mt-1">Packing & Protection</p>
-                                                </div>
-                                                
-                                                <!-- Load Step -->
-                                                <div class="relative z-10 text-center">
-                                                    <div class="w-10 h-10 rounded-full ${
-                                                        customer.stepStatus.load === 'completed' ? 'bg-green-500 text-white' : 
-                                                        customer.stepStatus.load === 'in-progress' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'
-                                                    } flex items-center justify-center mb-2">
-                                                        ${customer.stepStatus.load === 'completed' ? '<i class="fas fa-check"></i>' : '3'}
-                                                    </div>
-                                                    <h3 class="font-medium">Load</h3>
-                                                    <p class="text-xs text-gray-500 mt-1">Loading & Transport</p>
-                                                </div>
-                                                
-                                                <!-- Deliver Step -->
-                                                <div class="relative z-10 text-center">
-                                                    <div class="w-10 h-10 rounded-full ${
-                                                        customer.stepStatus.deliver === 'completed' ? 'bg-green-500 text-white' : 
-                                                        customer.stepStatus.deliver === 'in-progress' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-500'
-                                                    } flex items-center justify-center mb-2">
-                                                        ${customer.stepStatus.deliver === 'completed' ? '<i class="fas fa-check"></i>' : '4'}
-                                                    </div>
-                                                    <h3 class="font-medium">Deliver</h3>
-                                                    <p class="text-xs text-gray-500 mt-1">Delivery & Setup</p>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <div class="mt-4">
-                                            <h5 class="text-sm font-medium text-gray-700 mb-2">Current Step: ${getCurrentStep(customer.stepStatus)}</h5>
-                                            <p class="text-sm text-gray-600 mb-4">
-                                                Our team is currently ${getCurrentStepDescription(customer.stepStatus)}. 
-                                                ${getStepCompletionText(customer.stepStatus)}
-                                            </p>
-                                            
-                                            <div class="flex space-x-2">
-                                                <button class="step-btn px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700" 
-                                                        data-customer-id="${customer.id}" 
-                                                        data-step="${getCurrentStepKey(customer.stepStatus)}">
-                                                    Mark as Completed
-                                                </button>
-                                                <button class="px-3 py-1 border border-gray-300 text-gray-700 text-sm rounded hover:bg-gray-50">
-                                                    Add Notes
-                                                </button>
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 
                                 <div>
                                     <div class="bg-gray-50 rounded-lg p-5 mb-6">
-                                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Contact Information</h3>
+                                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Review Actions</h3>
                                         
-                                        <div class="space-y-4">
-                                            <div class="flex items-start">
-                                                <i class="fas fa-user text-gray-400 mt-1 mr-3"></i>
-                                                <div>
-                                                    <p class="text-sm font-medium text-gray-600">Full Name</p>
-                                                    <p class="text-gray-800 mt-1">${customer.name}</p>
-                                                </div>
-                                            </div>
+                                        <div class="space-y-3">
+                                            ${review.status === 'pending' ? `
+                                            <button class="update-review-status w-full px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700" 
+                                                    data-review-id="${review.id}" data-status="published">
+                                                <i class="fas fa-check mr-2"></i>Publish Review
+                                            </button>
+                                            <button class="update-review-status w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700" 
+                                                    data-review-id="${review.id}" data-status="archived">
+                                                <i class="fas fa-archive mr-2"></i>Archive Review
+                                            </button>
+                                            ` : review.status === 'published' ? `
+                                            <button class="update-review-status w-full px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700" 
+                                                    data-review-id="${review.id}" data-status="archived">
+                                                <i class="fas fa-archive mr-2"></i>Archive Review
+                                            </button>
+                                            <button class="w-full px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                                <i class="fas fa-share mr-2"></i>Share on Social Media
+                                            </button>
+                                            ` : `
+                                            <button class="update-review-status w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700" 
+                                                    data-review-id="${review.id}" data-status="published">
+                                                <i class="fas fa-check mr-2"></i>Publish Review
+                                            </button>
+                                            <button class="w-full px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                                <i class="fas fa-edit mr-2"></i>Edit Review
+                                            </button>
+                                            `}
                                             
-                                            <div class="flex items-start">
-                                                <i class="fas fa-phone text-gray-400 mt-1 mr-3"></i>
-                                                <div>
-                                                    <p class="text-sm font-medium text-gray-600">Phone</p>
-                                                    <p class="text-gray-800 mt-1">${customer.phone}</p>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="flex items-start">
-                                                <i class="fas fa-envelope text-gray-400 mt-1 mr-3"></i>
-                                                <div>
-                                                    <p class="text-sm font-medium text-gray-600">Email</p>
-                                                    <p class="text-gray-800 mt-1">${customer.email}</p>
-                                                </div>
-                                            </div>
-                                            
-                                            <div class="flex items-start">
-                                                <i class="fas fa-map-marker-alt text-gray-400 mt-1 mr-3"></i>
-                                                <div>
-                                                    <p class="text-sm font-medium text-gray-600">Current Address</p>
-                                                    <p class="text-gray-800 mt-1">${customer.address}</p>
-                                                </div>
-                                            </div>
+                                            <button class="w-full px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                                <i class="fas fa-print mr-2"></i>Print Review
+                                            </button>
                                         </div>
                                     </div>
                                     
                                     <div class="bg-gray-50 rounded-lg p-5">
-                                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Customer Review</h3>
+                                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Review Statistics</h3>
                                         
-                                        <div class="space-y-3">
-                                            <div class="flex">
-                                                ${[...Array(5)].map((_, i) => `
-                                                    <i class="fas fa-star text-yellow-400 ${i < customer.rating ? 'fill-current' : ''}"></i>
-                                                `).join('')}
+                                        <div class="space-y-4">
+                                            <div>
+                                                <div class="flex justify-between text-sm mb-1">
+                                                    <span class="text-gray-600">Average Rating</span>
+                                                    <span class="font-medium">4.8</span>
+                                                </div>
+                                                <div class="w-full progress-bar">
+                                                    <div class="progress bg-yellow-500" style="width: 96%"></div>
+                                                </div>
                                             </div>
-                                            <p class="text-gray-600 text-sm">${customer.review || 'No review provided'}</p>
                                             
-                                            <div class="mt-4 pt-4 border-t border-gray-200">
-                                                <h4 class="font-medium text-gray-700 mb-2">Move Status</h4>
-                                                <span class="px-2 py-1 rounded-full text-xs font-medium ${
-                                                    customer.status === 'completed' 
-                                                        ? 'bg-green-100 text-green-800' 
-                                                        : customer.status === 'in-progress'
-                                                            ? 'bg-amber-100 text-amber-800'
-                                                            : 'bg-blue-100 text-blue-800'
-                                                }">
-                                                    ${customer.status.charAt(0).toUpperCase() + customer.status.slice(1)}
-                                                </span>
+                                            <div>
+                                                <div class="flex justify-between text-sm mb-1">
+                                                    <span class="text-gray-600">Total Reviews</span>
+                                                    <span class="font-medium">1,253</span>
+                                                </div>
+                                                <div class="w-full progress-bar">
+                                                    <div class="progress bg-blue-600" style="width: 100%"></div>
+                                                </div>
                                             </div>
                                             
                                             <div class="mt-4">
-                                                <h4 class="font-medium text-gray-700 mb-2">Move Progress</h4>
-                                                <div class="w-full progress-bar mb-2">
-                                                    <div class="progress bg-blue-600" style="width: ${calculateProgress(customer.stepStatus)}%"></div>
+                                                <h4 class="font-medium text-gray-700 mb-2">Rating Distribution</h4>
+                                                ${[5, 4, 3, 2, 1].map(rating => `
+                                                <div class="flex items-center mb-2">
+                                                    <div class="w-10 text-sm text-gray-600">${rating} Star</div>
+                                                    <div class="flex-1 mx-2 bg-gray-200 rounded-full h-2">
+                                                        <div class="bg-yellow-400 h-2 rounded-full" style="width: ${rating === 5 ? '68%' : rating === 4 ? '22%' : rating === 3 ? '6%' : rating === 2 ? '2%' : '2%'}"></div>
+                                                    </div>
+                                                    <div class="w-8 text-sm text-right">${rating === 5 ? '68%' : rating === 4 ? '22%' : rating === 3 ? '6%' : rating === 2 ? '2%' : '2%'}</div>
                                                 </div>
-                                                <p class="text-sm text-gray-600">${calculateProgress(customer.stepStatus)}% Complete</p>
+                                                `).join('')}
                                             </div>
                                         </div>
                                     </div>
@@ -1222,342 +2091,886 @@
             setupEventListeners();
         }
         
-        // Helper functions
-        function calculateProgress(stepStatus) {
-            const completed = Object.values(stepStatus).filter(s => s === 'completed').length;
-            return Math.round((completed / 4) * 100);
-        }
-        
-        function getCurrentStep(stepStatus) {
-            if (stepStatus.plan !== 'completed') return 'Plan';
-            if (stepStatus.pack !== 'completed') return 'Pack';
-            if (stepStatus.load !== 'completed') return 'Load';
-            if (stepStatus.deliver !== 'completed') return 'Deliver';
-            return 'Completed';
-        }
-        
-        function getCurrentStepKey(stepStatus) {
-            if (stepStatus.plan !== 'completed') return 'plan';
-            if (stepStatus.pack !== 'completed') return 'pack';
-            if (stepStatus.load !== 'completed') return 'load';
-            if (stepStatus.deliver !== 'completed') return 'deliver';
-            return 'deliver';
-        }
-        
-        function getCurrentStepDescription(stepStatus) {
-            if (stepStatus.plan !== 'completed') return 'planning your move';
-            if (stepStatus.pack !== 'completed') return 'packing your items';
-            if (stepStatus.load !== 'completed') return 'loading your belongings';
-            if (stepStatus.deliver !== 'completed') return 'delivering to your new location';
-            return 'completing your move';
-        }
-        
-        function getStepCompletionText(stepStatus) {
-            if (stepStatus.plan !== 'completed') return 'We will contact you to discuss your move requirements.';
-            if (stepStatus.pack !== 'completed') return 'Expected to complete packing by 10:00 AM today.';
-            if (stepStatus.load !== 'completed') return 'Truck will arrive at 2:00 PM for loading.';
-            if (stepStatus.deliver !== 'completed') return 'Delivery expected by 5:00 PM today.';
-            return 'Your move is complete! Thank you for choosing PacknDash.';
-        }
-        
-        function formatDate(dateString, format = 'full') {
-            if (!dateString) return '';
+        // Render Reports
+        function renderReports() {
+            const stats = JSON.parse(localStorage.getItem('packndash_stats')) || {
+                happyCustomers: 1253,
+                successfulMoves: 2107,
+                activeMoves: 18,
+                revenue: 142500,
+                monthlyData: {
+                    '2023-01': { moves: 150, revenue: 125000 },
+                    '2023-02': { moves: 165, revenue: 137500 },
+                    '2023-03': { moves: 170, revenue: 141500 },
+                    '2023-04': { moves: 180, revenue: 150000 },
+                    '2023-05': { moves: 190, revenue: 158000 },
+                    '2023-06': { moves: 200, revenue: 166500 },
+                    '2023-07': { moves: 195, revenue: 162500 },
+                    '2023-08': { moves: 210, revenue: 175000 },
+                    '2023-09': { moves: 220, revenue: 183000 },
+                    '2023-10': { moves: 215, revenue: 179000 },
+                    '2023-11': { moves: 180, revenue: 150000 }
+                }
+            };
             
-            const date = new Date(dateString);
-            if (format === 'short') {
-                return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-            }
-            return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-        }
-        
-        function formatNumber(number) {
-            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        }
-        
-        function calculateMoveValue(customer) {
-            // Simple calculation based on property size
-            let baseValue = 0;
-            if (customer.moveSize.includes('Studio')) baseValue = 800;
-            else if (customer.moveSize.includes('1-bedroom')) baseValue = 1200;
-            else if (customer.moveSize.includes('2-bedroom')) baseValue = 1800;
-            else if (customer.moveSize.includes('3-bedroom')) baseValue = 2400;
-            else if (customer.moveSize.includes('4-bedroom')) baseValue = 3000;
-            else if (customer.moveSize.includes('Office')) baseValue = 2000;
-            
-            // Add value for additional services
-            baseValue += customer.services.length * 200;
-            
-            return formatNumber(baseValue);
-        }
-        
-        function calculateMonthlyRevenue() {
-            const customers = JSON.parse(localStorage.getItem('packndash_customers')) || [];
-            return customers
-                .filter(c => 
-                    new Date(c.moveDate).getMonth() === new Date().getMonth() && 
-                    new Date(c.moveDate).getFullYear() === new Date().getFullYear()
-                )
-                .reduce((total, customer) => {
-                    // Simple calculation based on property size
-                    let baseValue = 0;
-                    if (customer.moveSize.includes('Studio')) baseValue = 800;
-                    else if (customer.moveSize.includes('1-bedroom')) baseValue = 1200;
-                    else if (customer.moveSize.includes('2-bedroom')) baseValue = 1800;
-                    else if (customer.moveSize.includes('3-bedroom')) baseValue = 2400;
-                    else if (customer.moveSize.includes('4-bedroom')) baseValue = 3000;
-                    else if (customer.moveSize.includes('Office')) baseValue = 2000;
-                    
-                    // Add value for additional services
-                    baseValue += customer.services.length * 200;
-                    
-                    return total + baseValue;
-                }, 0);
-        }
-        
-        function getDayColor(dateString) {
-            const date = new Date(dateString);
+            // Get current month data
             const today = new Date();
-            const tomorrow = new Date();
-            tomorrow.setDate(today.getDate() + 1);
+            const currentMonth = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, '0')}`;
+            const currentData = stats.monthlyData[currentMonth] || { moves: 0, revenue: 0 };
             
-            if (date.toDateString() === today.toDateString()) return 'blue';
-            if (date.toDateString() === tomorrow.toDateString()) return 'purple';
-            return 'amber';
-        }
-    </script>
-</head>
-<body class="bg-gray-50">
-    <div class="flex h-screen overflow-hidden">
-        <!-- Sidebar -->
-        <div class="w-64 bg-white border-r border-gray-200 flex flex-col">
-            <div class="p-5 border-b border-gray-200">
-                <div class="flex items-center">
-                    <div class="bg-blue-700 text-white w-10 h-10 rounded-lg flex items-center justify-center font-bold text-xl mr-3">
-                        P
-                    </div>
-                    <h1 class="text-xl font-bold text-gray-800">PacknDash CRM</h1>
-                </div>
-            </div>
+            // Get previous month data
+            const prevMonthDate = new Date(today);
+            prevMonthDate.setMonth(today.getMonth() - 1);
+            const prevMonth = `${prevMonthDate.getFullYear()}-${(prevMonthDate.getMonth() + 1).toString().padStart(2, '0')}`;
+            const prevData = stats.monthlyData[prevMonth] || { moves: 0, revenue: 0 };
             
-            <nav class="flex-1 px-3 py-4 overflow-y-auto">
-                <a href="#" data-tab="dashboard" class="tab-active flex items-center px-4 py-3 text-sm rounded-lg mb-1">
-                    <i class="fas fa-home mr-3"></i>
-                    Dashboard
-                </a>
-                <a href="#" data-tab="customers" class="flex items-center px-4 py-3 text-sm rounded-lg text-gray-600 hover:bg-gray-100">
-                    <i class="fas fa-users mr-3"></i>
-                    Customers
-                </a>
-                <a href="#" data-tab="moves" class="flex items-center px-4 py-3 text-sm rounded-lg text-gray-600 hover:bg-gray-100">
-                    <i class="fas fa-truck mr-3"></i>
-                    Move Management
-                </a>
-                <a href="#" class="flex items-center px-4 py-3 text-sm rounded-lg text-gray-600 hover:bg-gray-100">
-                    <i class="fas fa-file-invoice mr-3"></i>
-                    Quotes
-                </a>
-                <a href="#" class="flex items-center px-4 py-3 text-sm rounded-lg text-gray-600 hover:bg-gray-100">
-                    <i class="fas fa-calendar-alt mr-3"></i>
-                    Schedule
-                </a>
-                <a href="#" class="flex items-center px-4 py-3 text-sm rounded-lg text-gray-600 hover:bg-gray-100">
-                    <i class="fas fa-comments mr-3"></i>
-                    Customer Reviews
-                </a>
-                <a href="#" class="flex items-center px-4 py-3 text-sm rounded-lg text-gray-600 hover:bg-gray-100">
-                    <i class="fas fa-chart-bar mr-3"></i>
-                    Reports
-                </a>
-                <a href="#" class="flex items-center px-4 py-3 text-sm rounded-lg text-gray-600 hover:bg-gray-100">
-                    <i class="fas fa-cog mr-3"></i>
-                    Settings
-                </a>
-                
-                <div class="mt-8 pt-4 border-t border-gray-200">
-                    <h3 class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
-                        Services
-                    </h3>
-                    <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-100">
-                        <i class="fas fa-home mr-3"></i>
-                        Residential Moving
-                    </a>
-                    <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-100">
-                        <i class="fas fa-building mr-3"></i>
-                        Commercial Storage
-                    </a>
-                    <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-100">
-                        <i class="fas fa-car mr-3"></i>
-                        Vehicle Storage
-                    </a>
-                    <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-100">
-                        <i class="fas fa-file-archive mr-3"></i>
-                        Document Storage
-                    </a>
-                    <a href="#" class="flex items-center px-4 py-2 text-sm text-gray-600 rounded-lg hover:bg-gray-100">
-                        <i class="fas fa-snowflake mr-3"></i>
-                        Seasonal Storage
-                    </a>
-                </div>
-            </nav>
+            // Calculate growth
+            const moveGrowth = prevData.moves > 0 ? ((currentData.moves - prevData.moves) / prevData.moves) * 100 : 100;
+            const revenueGrowth = prevData.revenue > 0 ? ((currentData.revenue - prevData.revenue) / prevData.revenue) * 100 : 100;
             
-            <div class="p-4 border-t border-gray-200">
-                <div class="flex items-center">
-                    <div class="bg-gray-300 border-2 border-dashed rounded-xl w-10 h-10"></div>
-                    <div class="ml-3">
-                        <p class="text-sm font-medium text-gray-700">Admin User</p>
-                        <p class="text-xs text-gray-500">admin@packndash.ae</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Main Content -->
-        <div class="flex-1 overflow-auto">
-            <!-- Header -->
-            <header class="bg-white shadow-sm">
-                <div class="flex items-center justify-between px-6 py-4">
-                    <div>
-                        <h1 class="text-2xl font-bold text-gray-800">Dashboard</h1>
-                        <p class="text-gray-500 text-sm mt-1">Overview of your moving business</p>
-                    </div>
-                    
-                    <div class="flex items-center space-x-4">
-                        <div class="relative">
-                            <input type="text" id="searchInput" placeholder="Search customers..." class="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
-                        </div>
-                        <button id="newMoveBtn" class="flex items-center bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
-                            <i class="fas fa-plus mr-2"></i>
-                            New Move
-                        </button>
-                    </div>
-                </div>
-            </header>
+            // Generate chart data
+            const months = Object.keys(stats.monthlyData).sort();
+            const moveData = months.map(month => stats.monthlyData[month].moves);
+            const revenueData = months.map(month => stats.monthlyData[month].revenue);
             
-            <!-- Main Content Area -->
-            <div id="mainContent">
-                <!-- Dashboard will be loaded here by JavaScript -->
-            </div>
-        </div>
-    </div>
-    
-    <!-- New Move Modal -->
-    <div id="newMoveModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50" style="display: none;">
-        <div class="bg-white rounded-xl shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto">
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-xl font-bold text-gray-800">New Move Request</h2>
-                    <button class="close-modal text-gray-400 hover:text-gray-600">
-                        <i class="fas fa-times text-2xl"></i>
-                    </button>
-                </div>
-                
-                <form id="moveForm">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Customer Name</label>
-                            <input type="text" id="name" name="name" required
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                placeholder="John Smith">
+            // Reports HTML
+            const reportsHTML = `
+                <div class="p-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+                        <div class="flex justify-between items-center mb-6">
+                            <div>
+                                <h2 class="text-lg font-semibold text-gray-800">Business Performance</h2>
+                                <p class="text-gray-500 text-sm mt-1">Track your business metrics and growth</p>
+                            </div>
+                            <div class="flex space-x-3">
+                                <select class="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                    <option>This Month</option>
+                                    <option>This Quarter</option>
+                                    <option>This Year</option>
+                                    <option>Custom Range</option>
+                                </select>
+                                <button class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                    <i class="fas fa-download mr-2"></i>Export Report
+                                </button>
+                            </div>
                         </div>
                         
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Customer Type</label>
-                            <select id="type" name="type" required
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                <option value="residential">Residential</option>
-                                <option value="commercial">Commercial</option>
-                            </select>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <div class="bg-blue-50 rounded-xl p-5">
+                                <div class="flex items-center">
+                                    <div class="p-3 rounded-lg bg-white shadow-sm">
+                                        <i class="fas fa-truck text-blue-600"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium text-gray-600">Moves This Month</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">${currentData.moves}</p>
+                                        <p class="text-xs ${
+                                            moveGrowth >= 0 ? 'text-green-600' : 'text-red-600'
+                                        } mt-1">
+                                            ${moveGrowth >= 0 ? '+' : ''}${moveGrowth.toFixed(1)}% from last month
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-green-50 rounded-xl p-5">
+                                <div class="flex items-center">
+                                    <div class="p-3 rounded-lg bg-white shadow-sm">
+                                        <i class="fas fa-credit-card text-green-600"></i>
+                                    </div>
+                                    <div class="ml-4">
+                                        <p class="text-sm font-medium text-gray-600">Revenue This Month</p>
+                                        <p class="text-2xl font-bold text-gray-800 mt-1">AED ${formatNumber(currentData.revenue)}</p>
+                                        <p class="text-xs ${
+                                            revenueGrowth >= 0 ? 'text-green-600' : 'text-red-600'
+                                        } mt-1">
+                                            ${revenueGrowth >= 0 ? '+' : ''}${revenueGrowth.toFixed(1)}% from last month
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" required
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                placeholder="+971 50 123 4567">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                            <input type="email" id="email" name="email" required
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                placeholder="email@example.com">
-                        </div>
-                        
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Current Address</label>
-                            <input type="text" id="address" name="address" required
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                placeholder="Enter full address">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Move Date</label>
-                            <input type="date" id="moveDate" name="moveDate" required
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        </div>
-                        
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Property Size</label>
-                            <select id="moveSize" name="moveSize" required
-                                class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                <option value="Studio apartment">Studio apartment</option>
-                                <option value="1-bedroom apartment">1-bedroom apartment</option>
-                                <option value="2-bedroom apartment">2-bedroom apartment</option>
-                                <option value="3-bedroom apartment">3-bedroom apartment</option>
-                                <option value="4-bedroom villa">4-bedroom villa</option>
-                                <option value="Office (up to 500 sq ft)">Office (up to 500 sq ft)</option>
-                                <option value="Office (500-1000 sq ft)">Office (500-1000 sq ft)</option>
-                            </select>
-                        </div>
-                        
-                        <div class="md:col-span-2">
-                            <label class="block text-sm font-medium text-gray-700 mb-2">Services Required</label>
-                            <div class="grid grid-cols-2 gap-2">
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="services" value="Packing"
-                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                    <span class="ml-2 text-sm text-gray-700">Packing Services</span>
-                                </label>
-                                
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="services" value="Furniture Dismantling"
-                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                    <span class="ml-2 text-sm text-gray-700">Furniture Dismantling</span>
-                                </label>
-                                
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="services" value="Storage"
-                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                    <span class="ml-2 text-sm text-gray-700">Storage Solutions</span>
-                                </label>
-                                
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="services" value="Vehicle Transport"
-                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                    <span class="ml-2 text-sm text-gray-700">Vehicle Transport</span>
-                                </label>
-                                
-                                <label class="flex items-center">
-                                    <input type="checkbox" name="services" value="Special Handling"
-                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
-                                    <span class="ml-2 text-sm text-gray-700">Special Handling (Art, Pianos, etc.)</span>
-                                </label>
+                        <div class="report-chart bg-white p-4 rounded-lg border border-gray-200">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Monthly Performance</h3>
+                            
+                            <div class="h-64 flex items-end justify-between px-4" style="margin-bottom: 2rem;">
+                                ${moveData.map((moves, index) => {
+                                    const height = Math.min(100, (moves / Math.max(...moveData)) * 100);
+                                    return `
+                                    <div class="flex flex-col items-center" style="width: ${100 / moveData.length}%;">
+                                        <div class="w-4 bg-blue-500 mb-1" style="height: ${height}%;"></div>
+                                        <span class="text-xs text-gray-500">${months[index].split('-')[1]}</span>
+                                    </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                            
+                            <div class="flex justify-center space-x-4 mt-4">
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 bg-blue-500 rounded mr-1"></div>
+                                    <span class="text-xs text-gray-600">Moves</span>
+                                </div>
+                                <div class="flex items-center">
+                                    <div class="w-3 h-3 bg-green-500 rounded mr-1"></div>
+                                    <span class="text-xs text-gray-600">Revenue</span>
+                                </div>
                             </div>
                         </div>
                     </div>
                     
-                    <div class="flex justify-end space-x-3">
-                        <button type="button" class="close-modal px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50">
-                            Cancel
-                        </button>
-                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
-                            Create Move
-                        </button>
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div class="lg:col-span-2">
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                                <h2 class="text-lg font-semibold text-gray-800 mb-6">Detailed Analytics</h2>
+                                
+                                <div class="mb-6">
+                                    <h3 class="text-md font-medium text-gray-800 mb-3">Customer Acquisition</h3>
+                                    <div class="h-48 bg-gray-50 rounded-lg p-4">
+                                        <div class="h-full flex items-end justify-between px-2">
+                                            ${[25, 40, 30, 45, 50, 60, 70].map(value => `
+                                            <div class="flex flex-col items-center w-8">
+                                                <div class="w-4 bg-purple-500 mb-1" style="height: ${value}%"></div>
+                                                <span class="text-xs text-gray-500">${value}</span>
+                                            </div>
+                                            `).join('')}
+                                        </div>
+                                        <div class="flex justify-center space-x-2 mt-2">
+                                            <span class="text-xs px-2 py-1 bg-purple-100 text-purple-800 rounded">Website</span>
+                                            <span class="text-xs px-2 py-1 bg-blue-100 text-blue-600 rounded">Referral</span>
+                                            <span class="text-xs px-2 py-1 bg-green-100 text-green-600 rounded">Social Media</span>
+                                            <span class="text-xs px-2 py-1 bg-amber-100 text-amber-600 rounded">Direct</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-6">
+                                    <h3 class="text-md font-medium text-gray-800 mb-3">Service Breakdown</h3>
+                                    <div class="grid grid-cols-2 gap-4">
+                                        <div class="bg-gray-50 rounded-lg p-4">
+                                            <h4 class="font-medium text-gray-800 mb-2">By Service Type</h4>
+                                            <div class="space-y-3">
+                                                <div class="flex justify-between">
+                                                    <span class="text-gray-600">Residential Moving</span>
+                                                    <span class="font-medium">42%</span>
+                                                </div>
+                                                <div class="w-full progress-bar">
+                                                    <div class="progress bg-blue-600" style="width: 42%"></div>
+                                                </div>
+                                                
+                                                <div class="flex justify-between">
+                                                    <span class="text-gray-600">Packing Services</span>
+                                                    <span class="font-medium">28%</span>
+                                                </div>
+                                                <div class="w-full progress-bar">
+                                                    <div class="progress bg-blue-600" style="width: 28%"></div>
+                                                </div>
+                                                
+                                                <div class="flex justify-between">
+                                                    <span class="text-gray-600">Storage Solutions</span>
+                                                    <span class="font-medium">18%</span>
+                                                </div>
+                                                <div class="w-full progress-bar">
+                                                    <div class="progress bg-blue-600" style="width: 18%"></div>
+                                                </div>
+                                                
+                                                <div class="flex justify-between">
+                                                    <span class="text-gray-600">Vehicle Transport</span>
+                                                    <span class="font-medium">12%</span>
+                                                </div>
+                                                <div class="w-full progress-bar">
+                                                    <div class="progress bg-blue-600" style="width: 12%"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="bg-gray-50 rounded-lg p-4">
+                                            <h4 class="font-medium text-gray-800 mb-2">Customer Satisfaction</h4>
+                                            <div class="flex items-center mb-4">
+                                                <div class="text-3xl font-bold text-yellow-400 mr-2">4.8</div>
+                                                <div class="flex">
+                                                    ${[...Array(5)].map((_, i) => `
+                                                        <i class="fas fa-star text-yellow-400 ${i < 4 ? 'fill-current' : ''}"></i>
+                                                    `).join('')}
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="space-y-3">
+                                                <div class="flex justify-between">
+                                                    <span class="text-gray-600">5 Stars</span>
+                                                    <span class="font-medium">68%</span>
+                                                </div>
+                                                <div class="w-full progress-bar">
+                                                    <div class="progress bg-yellow-400" style="width: 68%"></div>
+                                                </div>
+                                                
+                                                <div class="flex justify-between">
+                                                    <span class="text-gray-600">4 Stars</span>
+                                                    <span class="font-medium">22%</span>
+                                                </div>
+                                                <div class="w-full progress-bar">
+                                                    <div class="progress bg-yellow-400" style="width: 22%"></div>
+                                                </div>
+                                                
+                                                <div class="flex justify-between">
+                                                    <span class="text-gray-600">3 Stars and below</span>
+                                                    <span class="font-medium">10%</span>
+                                                </div>
+                                                <div class="w-full progress-bar">
+                                                    <div class="progress bg-yellow-400" style="width: 10%"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <h3 class="text-md font-medium text-gray-800 mb-3">Top Performing Areas</h3>
+                                    <div class="overflow-x-auto">
+                                        <table class="min-w-full divide-y divide-gray-200">
+                                            <thead class="bg-gray-50">
+                                                <tr>
+                                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Area</th>
+                                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Moves</th>
+                                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Revenue</th>
+                                                    <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Growth</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody class="bg-white divide-y divide-gray-200">
+                                                <tr>
+                                                    <td class="px-4 py-2 whitespace-nowrap">
+                                                        <div class="flex items-center">
+                                                            <i class="fas fa-map-marker-alt text-blue-500 mr-2"></i>
+                                                            <span class="font-medium">Downtown Dubai</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="px-4 py-2 whitespace-nowrap">320</td>
+                                                    <td class="px-4 py-2 whitespace-nowrap">AED 265,000</td>
+                                                    <td class="px-4 py-2 whitespace-nowrap">
+                                                        <span class="text-green-600">+12.5%</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-2 whitespace-nowrap">
+                                                        <div class="flex items-center">
+                                                            <i class="fas fa-map-marker-alt text-blue-500 mr-2"></i>
+                                                            <span class="font-medium">Jumeirah Beach Residence</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="px-4 py-2 whitespace-nowrap">285</td>
+                                                    <td class="px-4 py-2 whitespace-nowrap">AED 236,000</td>
+                                                    <td class="px-4 py-2 whitespace-nowrap">
+                                                        <span class="text-green-600">+8.3%</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-2 whitespace-nowrap">
+                                                        <div class="flex items-center">
+                                                            <i class="fas fa-map-marker-alt text-blue-500 mr-2"></i>
+                                                            <span class="font-medium">Business Bay</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="px-4 py-2 whitespace-nowrap">240</td>
+                                                    <td class="px-4 py-2 whitespace-nowrap">AED 198,000</td>
+                                                    <td class="px-4 py-2 whitespace-nowrap">
+                                                        <span class="text-green-600">+6.7%</span>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="px-4 py-2 whitespace-nowrap">
+                                                        <div class="flex items-center">
+                                                            <i class="fas fa-map-marker-alt text-blue-500 mr-2"></i>
+                                                            <span class="font-medium">Dubai Marina</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="px-4 py-2 whitespace-nowrap">215</td>
+                                                    <td class="px-4 py-2 whitespace-nowrap">AED 178,000</td>
+                                                    <td class="px-4 py-2 whitespace-nowrap">
+                                                        <span class="text-red-600">-2.1%</span>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+                                <h2 class="text-lg font-semibold text-gray-800 mb-4">Quick Metrics</h2>
+                                
+                                <div class="space-y-4">
+                                    <div class="bg-blue-50 rounded-lg p-4">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Conversion Rate</span>
+                                            <span class="font-bold">68%</span>
+                                        </div>
+                                        <div class="w-full progress-bar mt-2">
+                                            <div class="progress bg-blue-600" style="width: 68%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-green-50 rounded-lg p-4">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Customer Retention</span>
+                                            <span class="font-bold">42%</span>
+                                        </div>
+                                        <div class="w-full progress-bar mt-2">
+                                            <div class="progress bg-green-600" style="width: 42%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-purple-50 rounded-lg p-4">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Average Move Size</span>
+                                            <span class="font-bold">2.7 bedrooms</span>
+                                        </div>
+                                        <div class="w-full progress-bar mt-2">
+                                            <div class="progress bg-purple-600" style="width: 75%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-amber-50 rounded-lg p-4">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Average Revenue per Move</span>
+                                            <span class="font-bold">AED 685</span>
+                                        </div>
+                                        <div class="w-full progress-bar mt-2">
+                                            <div class="progress bg-amber-600" style="width: 85%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-pink-50 rounded-lg p-4">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Customer Satisfaction</span>
+                                            <span class="font-bold">97%</span>
+                                        </div>
+                                        <div class="w-full progress-bar mt-2">
+                                            <div class="progress bg-pink-600" style="width: 97%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                                <h2 class="text-lg font-semibold text-gray-800 mb-4">Top Services</h2>
+                                
+                                <div class="space-y-4">
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-gray-600">Residential Moving</span>
+                                            <span class="font-medium">42%</span>
+                                        </div>
+                                        <div class="w-full progress-bar">
+                                            <div class="progress bg-blue-600" style="width: 42%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-gray-600">Packing Services</span>
+                                            <span class="font-medium">28%</span>
+                                        </div>
+                                        <div class="w-full progress-bar">
+                                            <div class="progress bg-blue-600" style="width: 28%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-gray-600">Storage Solutions</span>
+                                            <span class="font-medium">18%</span>
+                                        </div>
+                                        <div class="w-full progress-bar">
+                                            <div class="progress bg-blue-600" style="width: 18%"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div>
+                                        <div class="flex justify-between mb-1">
+                                            <span class="text-gray-600">Vehicle Transport</span>
+                                            <span class="font-medium">12%</span>
+                                        </div>
+                                        <div class="w-full progress-bar">
+                                            <div class="progress bg-blue-600" style="width: 12%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-6 pt-4 border-t border-gray-200">
+                                    <h3 class="font-medium text-gray-800 mb-3">Service Profitability</h3>
+                                    <div class="space-y-3">
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Packing Services</span>
+                                            <span class="font-medium text-green-600">+32% margin</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Storage Solutions</span>
+                                            <span class="font-medium text-green-600">+28% margin</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Residential Moving</span>
+                                            <span class="font-medium text-amber-600">+18% margin</span>
+                                        </div>
+                                        <div class="flex justify-between">
+                                            <span class="text-gray-600">Vehicle Transport</span>
+                                            <span class="font-medium text-red-600">+8% margin</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</body>
-</html>
+                </div>
+            `;
+            
+            document.getElementById('mainContent').innerHTML = reportsHTML;
+            setupEventListeners();
+        }
+        
+        // Render Settings
+        function renderSettings() {
+            const settings = JSON.parse(localStorage.getItem('packndash_settings')) || {
+                companyName: 'PacknDash',
+                companyAddress: 'Dubai, UAE',
+                companyPhone: '+971 4 222 2222',
+                companyEmail: 'info@packndash.ae',
+                notificationSettings: {
+                    email: true,
+                    sms: true,
+                    push: true
+                },
+                businessHours: {
+                    monday: '8:00 AM - 6:00 PM',
+                    tuesday: '8:00 AM - 6:00 PM',
+                    wednesday: '8:00 AM - 6:00 PM',
+                    thursday: '8:00 AM - 6:00 PM',
+                    friday: '9:00 AM - 2:00 PM',
+                    saturday: 'Closed',
+                    sunday: 'Closed'
+                },
+                services: [
+                    { name: 'Residential Moving', price: 100, active: true },
+                    { name: 'Commercial Storage', price: 150, active: true },
+                    { name: 'Vehicle Storage', price: 80, active: true },
+                    { name: 'Document Storage', price: 60, active: true },
+                    { name: 'Packing Services', price: 50, active: true },
+                    { name: 'Furniture Assembly', price: 75, active: true }
+                ]
+            };
+            
+            // Settings HTML
+            const settingsHTML = `
+                <div class="p-6">
+                    <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+                        <h2 class="text-lg font-semibold text-gray-800 mb-6">CRM Settings</h2>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <div class="lg:col-span-1">
+                                <div class="space-y-2">
+                                    <a href="#" class="block p-3 rounded-lg bg-gray-50 font-medium text-gray-800 settings-section active" data-section="company">
+                                        Company Information
+                                    </a>
+                                    <a href="#" class="block p-3 rounded-lg hover:bg-gray-50 font-medium text-gray-600 settings-section" data-section="notifications">
+                                        Notification Settings
+                                    </a>
+                                    <a href="#" class="block p-3 rounded-lg hover:bg-gray-50 font-medium text-gray-600 settings-section" data-section="business-hours">
+                                        Business Hours
+                                    </a>
+                                    <a href="#" class="block p-3 rounded-lg hover:bg-gray-50 font-medium text-gray-600 settings-section" data-section="services">
+                                        Services & Pricing
+                                    </a>
+                                    <a href="#" class="block p-3 rounded-lg hover:bg-gray-50 font-medium text-gray-600 settings-section" data-section="team">
+                                        Team Management
+                                    </a>
+                                    <a href="#" class="block p-3 rounded-lg hover:bg-gray-50 font-medium text-gray-600 settings-section" data-section="integrations">
+                                        Integrations
+                                    </a>
+                                </div>
+                            </div>
+                            
+                            <div class="lg:col-span-2">
+                                <!-- Company Information -->
+                                <div id="company-settings" class="settings-content">
+                                    <div class="bg-gray-50 rounded-lg p-5 mb-6">
+                                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Company Information</h3>
+                                        
+                                        <div class="space-y-4">
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
+                                                <input type="text" id="companyName" value="${settings.companyName}"
+                                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                            </div>
+                                            
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Company Address</label>
+                                                <input type="text" id="companyAddress" value="${settings.companyAddress}"
+                                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                            </div>
+                                            
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                                                <input type="tel" id="companyPhone" value="${settings.companyPhone}"
+                                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                            </div>
+                                            
+                                            <div>
+                                                <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                                                <input type="email" id="companyEmail" value="${settings.companyEmail}"
+                                                    class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex justify-end">
+                                        <button id="saveCompanySettings" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Notification Settings -->
+                                <div id="notification-settings" class="settings-content hidden">
+                                    <div class="bg-gray-50 rounded-lg p-5 mb-6">
+                                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Notification Preferences</h3>
+                                        <p class="text-gray-600 mb-6">Choose how you want to be notified about important events and updates.</p>
+                                        
+                                        <div class="space-y-4">
+                                            <div class="flex items-start p-4 bg-white border border-gray-200 rounded-lg">
+                                                <div class="flex items-center h-5">
+                                                    <input id="emailNotifications" name="emailNotifications" type="checkbox" ${settings.notificationSettings.email ? 'checked' : ''}
+                                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                                </div>
+                                                <div class="ml-3">
+                                                    <label for="emailNotifications" class="font-medium text-gray-700">Email Notifications</label>
+                                                    <p class="text-gray-500 text-sm">Receive notifications via email for new moves, quotes, and customer inquiries.</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="flex items-start p-4 bg-white border border-gray-200 rounded-lg">
+                                                <div class="flex items-center h-5">
+                                                    <input id="smsNotifications" name="smsNotifications" type="checkbox" ${settings.notificationSettings.sms ? 'checked' : ''}
+                                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                                </div>
+                                                <div class="ml-3">
+                                                    <label for="smsNotifications" class="font-medium text-gray-700">SMS Notifications</label>
+                                                    <p class="text-gray-500 text-sm">Receive text message notifications for urgent move requests and schedule changes.</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="flex items-start p-4 bg-white border border-gray-200 rounded-lg">
+                                                <div class="flex items-center h-5">
+                                                    <input id="pushNotifications" name="pushNotifications" type="checkbox" ${settings.notificationSettings.push ? 'checked' : ''}
+                                                        class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                                </div>
+                                                <div class="ml-3">
+                                                    <label for="pushNotifications" class="font-medium text-gray-700">Push Notifications</label>
+                                                    <p class="text-gray-500 text-sm">Receive browser notifications when you're logged into the CRM.</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                                                <h4 class="font-medium text-blue-800 mb-2">Notification Timing</h4>
+                                                <p class="text-blue-700 text-sm">All notifications will be sent during business hours (8 AM - 6 PM GST).</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex justify-end">
+                                        <button id="saveNotificationSettings" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Business Hours -->
+                                <div id="business-hours-settings" class="settings-content hidden">
+                                    <div class="bg-gray-50 rounded-lg p-5 mb-6">
+                                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Business Hours</h3>
+                                        <p class="text-gray-600 mb-6">Set your company's operating hours for customer inquiries and move scheduling.</p>
+                                        
+                                        <div class="space-y-4">
+                                            ${Object.keys(settings.businessHours).map(day => `
+                                            <div class="flex items-center justify-between p-3 bg-white border border-gray-200 rounded-lg">
+                                                <span class="font-medium text-gray-700">${day.charAt(0).toUpperCase() + day.slice(1)}</span>
+                                                <input type="text" value="${settings.businessHours[day]}"
+                                                    class="border border-gray-300 rounded px-3 py-1 w-40 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                                                    placeholder="8:00 AM - 6:00 PM">
+                                            </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex justify-end">
+                                        <button id="saveBusinessHours" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Services & Pricing -->
+                                <div id="services-settings" class="settings-content hidden">
+                                    <div class="bg-gray-50 rounded-lg p-5 mb-6">
+                                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Services & Pricing</h3>
+                                        <p class="text-gray-600 mb-6">Manage your service offerings and pricing structure.</p>
+                                        
+                                        <div class="space-y-4">
+                                            ${settings.services.map(service => `
+                                            <div class="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg">
+                                                <div>
+                                                    <h4 class="font-medium text-gray-800">${service.name}</h4>
+                                                    <p class="text-gray-500 text-sm">AED ${service.price} per hour/base rate</p>
+                                                </div>
+                                                <div class="flex items-center">
+                                                    <span class="mr-4 text-sm text-gray-500">Active</span>
+                                                    <label class="relative inline-flex items-center cursor-pointer">
+                                                        <input type="checkbox" value="" class="sr-only peer service-toggle" data-service="${service.name}" ${service.active ? 'checked' : ''}>
+                                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex justify-end">
+                                        <button id="saveServices" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Team Management (placeholder) -->
+                                <div id="team-settings" class="settings-content hidden">
+                                    <div class="bg-gray-50 rounded-lg p-5 mb-6">
+                                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Team Management</h3>
+                                        <p class="text-gray-600 mb-6">Manage your team members and their access levels.</p>
+                                        
+                                        <div class="space-y-4">
+                                            <div class="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg">
+                                                <div class="flex items-center">
+                                                    <div class="bg-gray-300 border-2 border-dashed rounded w-10 h-10"></div>
+                                                    <div class="ml-3">
+                                                        <h4 class="font-medium text-gray-800">Admin User</h4>
+                                                        <p class="text-gray-500 text-sm">admin@packndash.ae</p>
+                                                    </div>
+                                                </div>
+                                                <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
+                                                    Administrator
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg">
+                                                <div class="flex items-center">
+                                                    <div class="bg-gray-300 border-2 border-dashed rounded w-10 h-10"></div>
+                                                    <div class="ml-3">
+                                                        <h4 class="font-medium text-gray-800">John Smith</h4>
+                                                        <p class="text-gray-500 text-sm">john@packndash.ae</p>
+                                                    </div>
+                                                </div>
+                                                <span class="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
+                                                    Manager
+                                                </span>
+                                            </div>
+                                            
+                                            <div class="flex items-center justify-between p-4 bg-white border border-gray-200 rounded-lg">
+                                                <div class="flex items-center">
+                                                    <div class="bg-gray-300 border-2 border-dashed rounded w-10 h-10"></div>
+                                                    <div class="ml-3">
+                                                        <h4 class="font-medium text-gray-800">Sarah Johnson</h4>
+                                                        <p class="text-gray-500 text-sm">sarah@packndash.ae</p>
+                                                    </div>
+                                                </div>
+                                                <span class="px-2 py-1 bg-amber-100 text-amber-800 text-xs rounded-full">
+                                                    Staff
+                                                </span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mt-6">
+                                            <button class="w-full py-2 border-2 border-dashed border-gray-300 rounded-lg text-gray-500 hover:border-blue-500 hover:text-blue-600">
+                                                <i class="fas fa-plus mr-2"></i>Add New Team Member
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex justify-end">
+                                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <!-- Integrations (placeholder) -->
+                                <div id="integrations-settings" class="settings-content hidden">
+                                    <div class="bg-gray-50 rounded-lg p-5 mb-6">
+                                        <h3 class="text-lg font-semibold text-gray-800 mb-4">Integrations</h3>
+                                        <p class="text-gray-600 mb-6">Connect with other tools and services to enhance your CRM.</p>
+                                        
+                                        <div class="grid grid-cols-2 gap-4">
+                                            <div class="p-4 bg-white border border-gray-200 rounded-lg text-center">
+                                                <div class="bg-blue-100 text-blue-800 w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3">
+                                                    <i class="fab fa-google text-xl"></i>
+                                                </div>
+                                                <h4 class="font-medium text-gray-800 mb-1">Google Calendar</h4>
+                                                <p class="text-gray-500 text-sm mb-3">Sync your move schedule with Google Calendar.</p>
+                                                <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm">Connect</button>
+                                            </div>
+                                            
+                                            <div class="p-4 bg-white border border-gray-200 rounded-lg text-center">
+                                                <div class="bg-green-100 text-green-800 w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3">
+                                                    <i class="fab fa-whatsapp text-xl"></i>
+                                                </div>
+                                                <h4 class="font-medium text-gray-800 mb-1">WhatsApp</h4>
+                                                <p class="text-gray-500 text-sm mb-3">Send automated notifications via WhatsApp.</p>
+                                                <button class="px-3 py-1 bg-green-600 text-white rounded text-sm">Connect</button>
+                                            </div>
+                                            
+                                            <div class="p-4 bg-white border border-gray-200 rounded-lg text-center">
+                                                <div class="bg-blue-100 text-blue-800 w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3">
+                                                    <i class="fas fa-envelope text-xl"></i>
+                                                </div>
+                                                <h4 class="font-medium text-gray-800 mb-1">Email Marketing</h4>
+                                                <p class="text-gray-500 text-sm mb-3">Connect with your email marketing platform.</p>
+                                                <button class="px-3 py-1 bg-blue-600 text-white rounded text-sm">Connect</button>
+                                            </div>
+                                            
+                                            <div class="p-4 bg-white border border-gray-200 rounded-lg text-center">
+                                                <div class="bg-purple-100 text-purple-800 w-12 h-12 rounded-lg flex items-center justify-center mx-auto mb-3">
+                                                    <i class="fas fa-chart-line text-xl"></i>
+                                                </div>
+                                                <h4 class="font-medium text-gray-800 mb-1">Analytics</h4>
+                                                <p class="text-gray-500 text-sm mb-3">Connect with Google Analytics for insights.</p>
+                                                <button class="px-3 py-1 bg-purple-600 text-white rounded text-sm">Connect</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flex justify-end">
+                                        <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                                            Save Changes
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('mainContent').innerHTML = settingsHTML;
+            
+            // Set up section navigation
+            document.querySelectorAll('.settings-section').forEach(section => {
+                section.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Update active section in sidebar
+                    document.querySelectorAll('.settings-section').forEach(s => {
+                        s.classList.remove('active', 'bg-gray-50', 'text-gray-800');
+                        s.classList.add('hover:bg-gray-50', 'text-gray-600');
+                    });
+                    this.classList.add('active', 'bg-gray-50', 'text-gray-800');
+                    this.classList.remove('hover:bg-gray-50', 'text-gray-600');
+                    
+                    // Show the corresponding content
+                    const sectionId = this.getAttribute('data-section');
+                    document.querySelectorAll('.settings-content').forEach(content => {
+                        content.classList.add('hidden');
+                    });
+                    document.getElementById(`${sectionId}-settings`).classList.remove('hidden');
+                });
+            });
+            
+            setupEventListeners();
+        }
+        
+        // Save settings
+        function saveSettings(settingType) {
+            const settings = JSON.parse(localStorage.getItem('packndash_settings')) || {
+                companyName: 'PacknDash',
+                companyAddress: 'Dubai, UAE',
+                companyPhone: '+971 4 222 2222',
+                companyEmail: 'info@packndash.ae',
+                notificationSettings: {
+                    email: true,
+                    sms: true,
+                    push: true
+                },
+                businessHours: {
+                    monday: '8:00 AM - 6:00 PM',
+                    tuesday: '8:00 AM - 6:00 PM',
+                    wednesday: '8:00 AM - 6:00 PM',
+                    thursday: '8:00 AM - 6:00 PM',
+                    friday: '9:00 AM - 2:00 PM',
+                    saturday: 'Closed',
+                    sunday: 'Closed'
+                },
+                services: [
+                    { name: 'Residential Moving', price: 100, active: true },
+                    { name: 'Commercial Storage', price: 150, active: true },
+                    { name: 'Vehicle Storage', price: 80, active: true },
+                    { name: 'Document Storage', price: 60, active: true },
+                    { name: 'Packing Services', price: 50, active: true },
+                    { name: 'Furniture Assembly', price: 75, active: true }
+                ]
+            };
+            
+            if (settingType === 'saveCompanySettings') {
+                settings.companyName = document.getElementById('companyName').value;
+                settings.companyAddress = document.getElementById('companyAddress').value;
+                settings.companyPhone = document.getElementById('companyPhone').value;
+                settings.companyEmail = document.getElementById('companyEmail').value;
+                
+                alert('Company information updated successfully!');
+            } 
+            else if (settingType === 'saveNotificationSettings') {
+                settings.notificationSettings.email = document.getElementById('emailNotifications').checked;
+                settings.notificationSettings.sms = document.getElementById('smsNotifications').checked;
+                settings.notificationSettings.push = document.getElementById('pushNotifications').checked;
+                
+                alert('Notification settings updated successfully!');
+            }
+            else if (settingType === 'saveBusinessHours') {
+                const hoursInputs = document.querySelectorAll('#business-hours-settings input');
+                const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+                
+                days.forEach((day, index) => {
+                    settings.businessHours[day] = hoursInputs[index].value;
+                });
+                
+                alert('Business hours updated successfully!');
+            }
+            else if (settingType === 'saveServices') {
+                // In a real implementation, we would update the services array
+                alert('Services settings updated successfully!');
+            }
+            
+            localStorage.setItem('packndash_settings', JSON.stringify(settings));
+        }
+        
+        // Toggle service active status
+        function toggleService(serviceName) {
+            const settings = JSON.parse(localStorage.getItem('packndash_settings')) || {
+                services: [
+                    { name: 'Residential Moving', price: 100, active: true },
+                    { name: 'Commercial Storage', price: 150, active: true },
+                    { name: 'Vehicle Storage', price: 80, active: true },
+                    { name: 'Document Storage', price: 60, active: true },
+                    { name: 'Packing Services', price: 50, active: true },
+                    { name: 'Furniture Assembly', price: 75, active: true }
+                ]
+            };
+            
+            const serviceIndex = settings.services.findIndex(s => s.name === serviceName);
+            if (serviceIndex !== -1) {
+                settings.services[serviceIndex].active = !settings.services[serviceIndex].active;
+                localStorage.setItem('packndash_settings', JSON.stringify(settings));
+                
+                alert(`Service "${serviceName}" has been ${settings.services[serviceIndex].active ? 'activated' : 'deactivated'}!`);
+            }
+        }
+        
+        // Show customer details
+        function
